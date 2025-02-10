@@ -1,1 +1,16 @@
-<p>user-form works!</p>
+<div>
+    <h2>Create New User</h2>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name" required />
+  
+      <label for="email">Email:</label>
+      <input id="email" formControlName="email" required type="email" />
+
+      <label for="role">Role:</label>
+      <input id="role" formControlName="role" required/>
+  
+      <button type="submit" [disabled]="userForm.invalid">Create User</button>
+    </form>
+  </div>
+  
