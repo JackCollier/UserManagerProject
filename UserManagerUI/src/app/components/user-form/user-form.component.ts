@@ -12,13 +12,14 @@ import { CommonModule } from '@angular/common';
 export class UserFormComponent {
   userForm: FormGroup;
   isEditing = false;
+  error = "";
   editingUserId: number | null = null;
 
   @Input() set selectedUser(user: User | null) {
     if (user) {
       this.isEditing = true;
       this.editingUserId = user.id;
-      this.userForm.patchValue(user); 
+      this.userForm.patchValue(user);
     } else {
       this.isEditing = false;
       this.editingUserId = null;
@@ -35,6 +36,7 @@ export class UserFormComponent {
   }
 
   onSubmit(): void {
+    this.error = "";
     if (this.userForm.valid) {
       const user: User = {
         id: this.editingUserId || 0,
@@ -43,15 +45,19 @@ export class UserFormComponent {
         role: this.userForm.value.role
       };
 
-      if (this.isEditing) {
-        this.userService.updateUser(user).subscribe(() => {
-          this.cancelEdit();
-        });
-      } else {
-        this.userService.addUser(user).subscribe(() => {
+      const operation = this.isEditing
+        ? this.userService.updateUser(user)
+        : this.userService.addUser(user);
+
+      operation.subscribe({
+        next: () => {
           this.userForm.reset();
-        });
-      }
+          this.cancelEdit();
+        },
+        error: () => {
+          this.error = "Error saving changes"
+        }
+      });
     }
   }
 
