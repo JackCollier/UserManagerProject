@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
+import { Role } from '../../models/role';
 
 @Component({
   selector: 'app-user-form',
@@ -14,6 +15,7 @@ export class UserFormComponent {
   isEditing = false;
   error = "";
   editingUserId: number | null = null;
+  roles = Object.values(Role);
 
   @Input() set selectedUser(user: User | null) {
     if (user) {

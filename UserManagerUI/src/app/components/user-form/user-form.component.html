@@ -11,7 +11,9 @@
   <input id="email" formControlName="email" required type="email"/>
 
   <label for="role">Role:</label>
-  <input id="role" formControlName="role" required/>
+  <select id="role" formControlName="role" required>
+    <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+  </select>
 
   <button type="submit" [disabled]="userForm.invalid">
     {{ isEditing ? 'Update User' : 'Create User' }}
