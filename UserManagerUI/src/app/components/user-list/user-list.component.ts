@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { User, UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-user-list',
@@ -11,6 +12,8 @@ import { CommonModule } from '@angular/common';
 export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];
   private usersSub!: Subscription;
+
+  @Output() userSelected = new EventEmitter<User>(); 
 
   constructor(private userService: UserService) {}
 
@@ -27,9 +30,12 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
+  editUser(user: User): void {
+    this.userSelected.emit(user); 
+  }
+
   deleteUser(id: number): void {
-      this.userService.deleteUser(id).subscribe(() => {
-      });
+    this.userService.deleteUser(id).subscribe();
   }
 
   ngOnDestroy(): void {
