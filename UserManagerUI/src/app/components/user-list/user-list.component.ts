@@ -11,9 +11,11 @@ import { User } from '../../models/user';
 })
 export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];
+  isLoading = false;
+  error = "";
   private usersSub!: Subscription;
 
-  @Output() userSelected = new EventEmitter<User>(); 
+  @Output() userSelected = new EventEmitter<User>();
 
   constructor(private userService: UserService) {}
 
@@ -25,17 +27,30 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   fetchUsers(): void {
-    this.userService.getUsers().subscribe(users => {
-      this.users = users;
+    this.error = "";
+    this.isLoading = true;
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.error = "Error fetching user data"
+        this.isLoading = false;
+      }
     });
   }
 
   editUser(user: User): void {
-    this.userSelected.emit(user); 
+    this.userSelected.emit(user);
   }
 
   deleteUser(id: number): void {
-    this.userService.deleteUser(id).subscribe();
+    this.error = ""
+      this.userService.deleteUser(id).subscribe({
+        error: () => 
+          this.error = "Error deleting user data"
+      });
   }
 
   ngOnDestroy(): void {
