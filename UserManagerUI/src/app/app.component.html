@@ -1,2 +1,2 @@
 <app-user-form [selectedUser]="editingUser"></app-user-form>
-<app-user-list (userSelected)="editingUser = $event"></app-user-list>
+<app-user-list (userSelected)="onUserSelected($event)"></app-user-list>
